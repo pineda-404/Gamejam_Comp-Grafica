@@ -20,7 +20,7 @@ PRECIO_MINIMO_COBRO = 0   # precio mínimo para cobrar un pedido (evitar cobros 
 # Sistema de Niveles (§10.3)
 NIVEL_METAS = {1: 60, 2: 80, 3: 100, 4: 115, 5: 125}
 NIVEL_META_TECHO = 130
-FACTOR_TRANSFERENCIA = 0.75
+FACTOR_TRANSFERENCIA = {1: 0.75, 2: 0.60, 3: 0.45, 4: 0.30}
 
 # Economía de tiempo por nivel (§10.5)
 # Clave = nivel; niveles > 4 usan la clave 4

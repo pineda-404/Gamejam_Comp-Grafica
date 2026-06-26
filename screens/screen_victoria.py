@@ -1,6 +1,6 @@
 import pygame
 
-from settings import AMARILLO, BLANCO, NEGRO, NARANJA
+from settings import AMARILLO, BLANCO, NEGRO, NARANJA, FACTOR_TRANSFERENCIA
 
 
 class ScreenVictoria:
@@ -24,7 +24,8 @@ class ScreenVictoria:
         """Llamar una sola vez cuando se entra al estado nivel_completado."""
         self._nivel_completado = self.gm.nivel
         self._excedente = max(0, self.gm.dinero_acumulado - self.gm.get_meta_actual())
-        self._bonus_inicial = int(self._excedente * 0.75)
+        factor = FACTOR_TRANSFERENCIA.get(self._nivel_completado, 0.0)
+        self._bonus_inicial = int(self._excedente * factor)
 
     def manejar_eventos(self, eventos):
         for evento in eventos:

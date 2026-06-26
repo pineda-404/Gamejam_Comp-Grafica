@@ -49,7 +49,8 @@ class GameManager:
     def subir_nivel(self) -> None:
         """Calcula transferencia, sube el nivel y reinicia la ronda."""
         excedente = max(0, self.dinero_acumulado - self.get_meta_actual())
-        self.dinero_inicial = int(excedente * FACTOR_TRANSFERENCIA)
+        factor = FACTOR_TRANSFERENCIA.get(self.nivel, 0.0)
+        self.dinero_inicial = int(excedente * factor)
         self.nivel += 1
         self.tiempo_restante = TIEMPO_LIMITE
         self.dinero_acumulado = self.dinero_inicial
