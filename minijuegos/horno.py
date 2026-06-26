@@ -18,7 +18,7 @@ class Horno(MinijuegoBase):
         pygame.K_RIGHT: "flecha_derecha",
     }
 
-    def __init__(self, velocidad_extra: float = 0):
+    def __init__(self, velocidad_extra: float = 0, nivel: int = 1):
         super().__init__()
 
         self.tiempo_transcurrido = 0.0

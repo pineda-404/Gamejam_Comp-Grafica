@@ -129,9 +129,9 @@ class ScreenJuego:
             return
         cls = self.MINIJUEGOS_REGISTRO[id_minijuego]
         if id_minijuego == "horno" and self.gm.indice_minijuego == 2:
-            self.gm.minijuego_actual = cls(velocidad_extra=1.0)
+            self.gm.minijuego_actual = cls(velocidad_extra=1.0, nivel=self.gm.nivel)
         else:
-            self.gm.minijuego_actual = cls()
+            self.gm.minijuego_actual = cls(nivel=self.gm.nivel)
 
     def _dibujar_hud(self, pantalla):
         tiempo = _formatear_tiempo(self.gm.tiempo_restante)

@@ -6,6 +6,7 @@ from screens.screen_inicio import ScreenInicio
 from screens.screen_juego import ScreenJuego
 from screens.screen_pausa import ScreenPausa
 from screens.screen_victoria import ScreenVictoria
+from screens.screen_nivel_superado import ScreenNivelSuperado
 from settings import ALTO, ANCHO, FPS, TITULO
 
 
@@ -24,6 +25,7 @@ def main():
         "victoria": ScreenVictoria(gm),
         "derrota": ScreenDerrota(gm),
         "pausa": ScreenPausa(gm),
+        "nivel_superado": ScreenNivelSuperado(gm),
     }
 
     corriendo = True
