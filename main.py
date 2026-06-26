@@ -4,6 +4,7 @@ from game_manager import GameManager
 from screens.screen_derrota import ScreenDerrota
 from screens.screen_inicio import ScreenInicio
 from screens.screen_juego import ScreenJuego
+from screens.screen_pausa import ScreenPausa
 from screens.screen_victoria import ScreenVictoria
 from settings import ALTO, ANCHO, FPS, TITULO
 
@@ -15,12 +16,14 @@ def main():
     clock = pygame.time.Clock()
 
     gm = GameManager()
+    screen_juego = ScreenJuego(gm)
     screens = {
         "inicio": ScreenInicio(gm),
-        "juego": ScreenJuego(gm),
-        "minijuego": ScreenJuego(gm),
+        "juego": screen_juego,
+        "minijuego": screen_juego,  # comparte instancia
         "victoria": ScreenVictoria(gm),
         "derrota": ScreenDerrota(gm),
+        "pausa": ScreenPausa(gm),
     }
 
     corriendo = True
@@ -32,10 +35,27 @@ def main():
             if evento.type == pygame.QUIT:
                 corriendo = False
 
+        # ESC como toggle: pausa ↔ reanuda (un solo bloque, nunca ambos en el mismo frame)
+        for evento in eventos:
+            if evento.type == pygame.KEYDOWN and evento.key == pygame.K_ESCAPE:
+                if gm.estado in ("juego", "minijuego"):
+                    gm.pausar()
+                elif gm.estado == "pausa":
+                    gm.reanudar()
+                break  # Consumir el evento; no lo procesa ninguna otra pantalla
+
         screen_actual = screens.get(gm.estado)
         if screen_actual:
+            # En pausa: primero dibujar el estado anterior (fondo del juego)
+            # para que el overlay de pausa se superponga correctamente
+            if gm.estado == "pausa" and gm._estado_previo:
+                screen_fondo = screens.get(gm._estado_previo)
+                if screen_fondo:
+                    screen_fondo.dibujar(pantalla)
+
             screen_actual.manejar_eventos(eventos)
-            screen_actual.actualizar(dt)
+            if gm.estado != "pausa":
+                screen_actual.actualizar(dt)
             screen_actual.dibujar(pantalla)
 
         pygame.display.flip()

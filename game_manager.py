@@ -15,6 +15,7 @@ class GameManager:
         self.indice_minijuego = 0
         self.fase_pedido: str | None = None  # anim_cliente | anim_horno | anim_resultado
         self._ultimo_pedido_exitoso: bool | None = None
+        self._estado_previo: str | None = None  # estado guardado al pausar
         self._llenar_cola_pedidos()
 
     def reiniciar(self) -> None:
@@ -27,7 +28,42 @@ class GameManager:
         self.indice_minijuego = 0
         self.fase_pedido = None
         self._ultimo_pedido_exitoso = None
+        self._estado_previo = None
         self._llenar_cola_pedidos()
+
+    # ------------------------------------------------------------------
+    # Pausa
+    # ------------------------------------------------------------------
+
+    def pausar(self) -> None:
+        """Congela el juego guardando el estado actual."""
+        if self.estado in ("juego", "minijuego"):
+            self._estado_previo = self.estado
+            self.estado = "pausa"
+
+    def reanudar(self) -> None:
+        """Reanuda desde donde se pausó."""
+        if self.estado == "pausa" and self._estado_previo:
+            self.estado = self._estado_previo
+            self._estado_previo = None
+
+    def reiniciar_nivel(self) -> None:
+        """Reinicia el nivel actual (mismo nivel, timer y dinero a cero)."""
+        self.dinero_acumulado = 0
+        self.tiempo_restante = TIEMPO_LIMITE
+        self.pedidos_disponibles.clear()
+        self.pedido_activo = None
+        self.minijuego_actual = None
+        self.indice_minijuego = 0
+        self.fase_pedido = None
+        self._ultimo_pedido_exitoso = None
+        self._estado_previo = None
+        self.estado = "juego"
+        self._llenar_cola_pedidos()
+
+    def salir_al_menu(self) -> None:
+        """Vuelve al menú de inicio reiniciando todo."""
+        self.reiniciar()
 
     def actualizar_timer(self, dt: float) -> None:
         if self.estado not in ("juego", "minijuego"):
